@@ -1,6 +1,7 @@
-[gd_scene load_steps=27 format=4 uid="uid://cashgotxn8mk8"]
+[gd_scene load_steps=32 format=4 uid="uid://cashgotxn8mk8"]
 
 [ext_resource type="Texture2D" uid="uid://dvt1wsjhrlbg6" path="res://Assets/rocky_terrain_diff_4k.jpg" id="1_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://coka6hu16ypur" path="res://Assets/ancient-blank-scroll-of-parchment-old-paper-sheet-manuscript-cut-out-transparent-png.png" id="1_2cqfq"]
 [ext_resource type="Script" uid="uid://b22vpkdb0t3ku" path="res://player.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://2hitdsd7krod" path="res://sub_viewport_container.gd" id="2_272bh"]
 [ext_resource type="PackedScene" uid="uid://d4knlelgiiuwn" path="res://Assets/low_poly_trees_free.glb" id="3_h2yge"]
@@ -13,6 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://cdwccrgun66jv" path="res://Assets/jumpscare.jpg" id="9_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://pp516lv2yvqo" path="res://Assets/cabin.glb" id="11_dg77c"]
 [ext_resource type="PackedScene" uid="uid://c5efyyvj1pw1y" path="res://Assets/log_cabin_free_download.glb" id="12_ycdy4"]
+[ext_resource type="Script" uid="uid://bxsefqabjvntv" path="res://jurnal_obiect.gd" id="15_yaehf"]
+[ext_resource type="PackedScene" uid="uid://c74euq60psw3n" path="res://Assets/journal.glb" id="16_074og"]
 
 [sub_resource type="Sky" id="Sky_0xm2m"]
 
@@ -22,9 +25,14 @@ background_energy_multiplier = 0.1
 sky = SubResource("Sky_0xm2m")
 tonemap_mode = 2
 fog_enabled = true
+fog_light_color = Color(0.053806342, 0.10067917, 0.09902892, 1)
 fog_density = 0.05
+fog_sky_affect = 0.116
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.02
+volumetric_fog_sky_affect = 0.148
+
+[sub_resource type="Theme" id="Theme_ycdy4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1bvp3"]
 
@@ -281,6 +289,9 @@ size = Vector3(1, 1, 0.9902344)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2cqfq"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_cegan"]
+radius = 1.995
+
 [node name="Main" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -288,7 +299,7 @@ environment = SubResource("Environment_h2yge")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.87511003, 0.48392403, 0, 0.010058569, -0.018189536, 0.99978393, 0.48381948, -0.87492096, -0.020785429, 0, 1.1701496, 0)
-light_color = Color(0.0011271259, 0.076737575, 0.42307687, 1)
+light_color = Color(0.13771906, 0.0027561954, 0.20873529, 1)
 light_energy = 0.1
 shadow_enabled = true
 
@@ -323,6 +334,73 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 22
 text = "."
+
+[node name="ProgressBar" type="ProgressBar" parent="HUD"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -27.0
+offset_right = 325.0
+grow_vertical = 0
+theme = SubResource("Theme_ycdy4")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.5980579, 0.47909737, 0.68431354, 1)
+value = 100.0
+
+[node name="Label" type="Label" parent="HUD"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = -48.815002
+offset_right = 72.0
+offset_bottom = -25.815002
+grow_vertical = 0
+text = "Energie: "
+
+[node name="JurnalOverlay" type="Control" parent="HUD"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 250.0
+offset_top = 170.0
+offset_right = 250.0
+offset_bottom = 170.0
+scale = Vector2(0.26, 0.26)
+
+[node name="TextureRect" type="TextureRect" parent="HUD/JurnalOverlay"]
+layout_mode = 0
+offset_left = -1038.4614
+offset_top = -200.0
+offset_right = 2387.3162
+offset_bottom = 1366.6383
+scale = Vector2(1.365, 1.365)
+texture = ExtResource("1_2cqfq")
+
+[node name="Label" type="Label" parent="HUD/JurnalOverlay/TextureRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -872.8888
+offset_top = -283.31915
+offset_right = 204.1112
+offset_bottom = -97.31915
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.66, 1.66)
+theme_override_colors/font_color = Color(0.34901962, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_font_sizes/font_size = 17
+text = "13 Octombrie. M-am trezit in intuneric.
+
+Cineva se joaca cu mine. Cele 10 foi de examen care imi decid soarta sunt ascunse printre copaci. Fara ele, nu pot pleca de aici.
+
+Am simtit o prezenta rece in spatele meu. O umbra inalta, care sopteste formule gresite si intrebari capcana. E Shadow Examinator.
+
+Nu te opri din alergat. Nu te uita in spate. Gaseste foile si dispari!"
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(0.1, 0, 0, 0, 10, 0, 0, 0, 150, -49.67423, 4, 0)
@@ -836,6 +914,10 @@ texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 10.0
+offset_bottom = 9.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -1066,10 +1148,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -547.0
-offset_top = -74.0
-offset_right = 157.0
-offset_bottom = 113.0
+offset_left = -570.0
+offset_top = -32.0
+offset_right = 134.0
+offset_bottom = 155.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.25490198, 0, 1)
@@ -1100,5 +1182,20 @@ shape = SubResource("BoxShape3D_vivmo")
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 6.577179, 0, -6.6229944)
 shape = SubResource("BoxShape3D_2cqfq")
 metadata/_edit_group_ = true
+
+[node name="JurnalObiect" type="Area3D" parent="."]
+script = ExtResource("15_yaehf")
+
+[node name="Sketchfab_Scene157" parent="JurnalObiect" instance=ExtResource("16_074og")]
+transform = Transform3D(0.01, 0, 0, 0, 0.02, 0, 0, 0, 0.01, 0, 0, 39.580097)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="JurnalObiect"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2239241, 0, 39.632088)
+shape = SubResource("SphereShape3D_cegan")
+
+[node name="Label3D" type="Label3D" parent="JurnalObiect"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34924066, 39.548996)
+billboard = 1
+text = "Apasa [E]"
 
 [editable path="SubViewportContainer/SubViewport/Inamic/Running"]

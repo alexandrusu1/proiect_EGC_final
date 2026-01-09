@@ -22,15 +22,21 @@ var timp_bobbing = 0.0
 var pozitie_initiala_camera = Vector3.ZERO
 
 @onready var camera = $Camera3D
+@onready var stamina_bar = get_node("/root/Main/HUD/ProgressBar") 
+
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if camera:
 		pozitie_initiala_camera = camera.position
 		camera.fov = FOV_NORMAL
+		
+	if stamina_bar:
+		stamina_bar.max_value = STAMINA_MAX
+		stamina_bar.value = stamina
 
 func _input(event):
-	if event is InputEventMouseMotion and Input.mouse_mode == Input. MOUSE_MODE_CAPTURED: 
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * SENZITIVITATE)
 		if camera:
 			camera.rotate_x(-event.relative.y * SENZITIVITATE)
@@ -44,7 +50,10 @@ func _physics_process(delta):
 		velocity.y = VITEZA_SARITURA
 	
 	if Input.is_action_just_pressed("ui_cancel"):
-		Input.mouse_mode = Input. MOUSE_MODE_VISIBLE
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		else:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	proceseaza_miscare(delta)
 	actualizeaza_stamina(delta)
@@ -56,7 +65,8 @@ func proceseaza_miscare(delta):
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	var este_sprint = Input.is_action_pressed("shift") and stamina > 0 and is_on_floor() and input_dir != Vector2.ZERO
+	# AM MODIFICAT AICI: "sprint"
+	var este_sprint = Input.is_action_pressed("sprint") and stamina > 0 and is_on_floor() and input_dir != Vector2.ZERO
 	var viteza_actuala = VITEZA_SPRINT if este_sprint else VITEZA_NORMALA
 	
 	if direction:
@@ -69,12 +79,16 @@ func proceseaza_miscare(delta):
 func actualizeaza_stamina(delta):
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	
-	if Input.is_action_pressed("shift") and is_on_floor() and input_dir != Vector2.ZERO and stamina > 0:
+	# AM MODIFICAT AICI: "sprint"
+	if Input.is_action_pressed("sprint") and is_on_floor() and input_dir != Vector2.ZERO and stamina > 0:
 		stamina -= STAMINA_CONSUM_SPRINT * delta
 	else:
 		stamina += STAMINA_REGENERARE * delta
 	
 	stamina = clamp(stamina, 0, STAMINA_MAX)
+	
+	if stamina_bar:
+		stamina_bar.value = stamina
 
 func actualizeaza_camera(delta):
 	if not camera:
@@ -83,10 +97,11 @@ func actualizeaza_camera(delta):
 	var target_fov = FOV_NORMAL
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	
-	if Input.is_action_pressed("shift") and stamina > 0 and input_dir != Vector2.ZERO and is_on_floor():
+
+	if Input.is_action_pressed("sprint") and stamina > 0 and input_dir != Vector2.ZERO and is_on_floor():
 		target_fov = FOV_SPRINT
 	
-	camera. fov = lerp(camera. fov, target_fov, FOV_TRANSITION_SPEED * delta)
+	camera.fov = lerp(camera.fov, target_fov, FOV_TRANSITION_SPEED * delta)
 	
 	if is_on_floor() and velocity.length() > 0.5:
 		timp_bobbing += delta * BOBBING_FREQUENCY * (velocity.length() / VITEZA_NORMALA)
@@ -101,6 +116,3 @@ func actualizeaza_camera(delta):
 	else:
 		timp_bobbing = 0
 		camera.position = lerp(camera.position, pozitie_initiala_camera, delta * 10.0)
-
-func get_stamina_percent() -> float:
-	return (stamina / STAMINA_MAX) * 100.0
