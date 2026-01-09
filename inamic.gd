@@ -1,66 +1,108 @@
 extends CharacterBody3D
 
-@export var viteza: float = 2.0
-@export var player_target: Node3D 
-@export var distanta_de_atac: float = 1.5
-@export var raza_detectie: float = 10.0
-@export var jumpscare_screen: Control 
+@export var viteza_patrulare: float = 4
+@export var viteza_urmarire: float = 2
+@export var raza_detectie: float = 15.0
+@export var raza_scapare: float = 20
+@export var distanta_atac: float = 1.5
 
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+
+@export var jumpscare_screen: CanvasLayer 
+
+
+var player: Node3D = null
+var gravitatie = ProjectSettings.get_setting("physics/3d/default_gravity")
 var is_game_over = false
 
-func _ready():
-	if jumpscare_screen:
-		jumpscare_screen.visible = false
 
-	var model_intern = get_node_or_null("Running")
-	if model_intern:
-		model_intern.rotation_degrees.y = 180
+enum { PATRULA, URMARIRE }
+var stare_curenta = PATRULA
+
+var directie_patrulare = Vector3.ZERO
+var timp_schimbare_directie = 0.0
+
+func _ready():
+	player = get_tree().get_first_node_in_group("Player")
+	if not player:
+		player = get_node_or_null("/root/Main/Player")
+
+	if jumpscare_screen: 
+		jumpscare_screen.visible = false
 	
-	var anim_player = find_child("AnimationPlayer", true, false)
-	if anim_player:
-		var lista_animatii = anim_player.get_animation_list()
-		if lista_animatii.size() > 0:
-			anim_player.get_animation_library("")
-			anim_player.play(lista_animatii[0])
+
+	var model = get_node_or_null("Running")
+	if model: model.rotation_degrees.y = 180
+	
+	var anim = find_child("AnimationPlayer", true, false)
+	if anim: 
+		var l = anim.get_animation_list()
+		if l.size() > 0: anim.play(l[0])
 
 func _physics_process(delta):
-	if is_game_over:
-		return
+	if is_game_over: return
 
 	if not is_on_floor():
-		velocity.y -= gravity * delta
+		velocity.y -= gravitatie * delta
 
-	if player_target:
-		var distanta = global_position.distance_to(player_target.global_position)
+	if player:
+		var distanta = global_position.distance_to(player.global_position)
+		
+		match stare_curenta:
+			PATRULA:
+				comportament_patrulare(delta)
+				if distanta < raza_detectie:
+					stare_curenta = URMARIRE
+			
+			URMARIRE:
+				comportament_urmarire(distanta)
+				if distanta > raza_scapare:
+					stare_curenta = PATRULA
 
-		if distanta < distanta_de_atac:
-			game_over()
-			velocity.x = 0
-			velocity.z = 0
-		elif distanta < raza_detectie:
-			var target_pos = player_target.global_position
-			target_pos.y = global_position.y 
-			
-			look_at(target_pos, Vector3.UP)
-			
-			var directie = -transform.basis.z
-			velocity.x = directie.x * viteza
-			velocity.z = directie.z * viteza
-		else:
-			velocity.x = move_toward(velocity.x, 0, viteza)
-			velocity.z = move_toward(velocity.z, 0, viteza)
-	
 	move_and_slide()
 
-func game_over():
-	if is_game_over:
-		return
-		
-	is_game_over = true
+func comportament_patrulare(delta):
+	timp_schimbare_directie -= delta
+	if timp_schimbare_directie <= 0 or is_on_wall():
+		schimba_directia_random()
 	
+	velocity.x = directie_patrulare.x * viteza_patrulare
+	velocity.z = directie_patrulare.z * viteza_patrulare
+	
+	if velocity.length() > 0.1:
+		rotire_lina(global_position + velocity, delta * 2.0)
+
+func schimba_directia_random():
+	var unghi = randf_range(-PI, PI)
+	directie_patrulare = Vector3(sin(unghi), 0, cos(unghi)).normalized()
+	timp_schimbare_directie = randf_range(2.0, 5.0)
+
+func comportament_urmarire(distanta):
+
+	if distanta < distanta_atac:
+		game_over()
+		return
+
+	var dir = (player.global_position - global_position).normalized()
+	velocity.x = dir.x * viteza_urmarire
+	velocity.z = dir.z * viteza_urmarire
+	rotire_lina(player.global_position, 0.1)
+
+func rotire_lina(tinta, viteza_rot):
+	var look_target = tinta
+	look_target.y = global_position.y
+	look_at(look_target, Vector3.UP)
+
+
+func game_over():
+	if is_game_over: return
+	is_game_over = true
+
+	velocity = Vector3.ZERO
+	
+
 	if jumpscare_screen:
 		jumpscare_screen.visible = true
-	
+
 	await get_tree().create_timer(2.0).timeout
+
 	get_tree().reload_current_scene()
