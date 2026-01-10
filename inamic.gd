@@ -5,12 +5,10 @@ extends CharacterBody3D
 @export var raza_detectie: float = 15.0
 @export var raza_scapare: float = 20
 @export var distanta_atac: float = 1.5
-@export var imagine_alerta: TextureRect
+
 
 @export var jumpscare_screen: CanvasLayer 
 
-@onready var sunet_idle = $SunetIdle
-var timp_urmator_sunet_idle: float = 5.0
 
 var player: Node3D = null
 var gravitatie = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -52,16 +50,11 @@ func _physics_process(delta):
 		match stare_curenta:
 			PATRULA:
 				comportament_patrulare(delta)
-				if imagine_alerta:
-					imagine_alerta.visible = false
 				if distanta < raza_detectie:
 					stare_curenta = URMARIRE
 			
 			URMARIRE:
 				comportament_urmarire(distanta)
-				if imagine_alerta:
-					imagine_alerta.visible = true
-					imagine_alerta.modulate.a = 0.5 + abs(sin(Time.get_ticks_msec() * 0.005)) * 0.5
 				if distanta > raza_scapare:
 					stare_curenta = PATRULA
 
@@ -77,12 +70,6 @@ func comportament_patrulare(delta):
 	
 	if velocity.length() > 0.1:
 		rotire_lina(global_position + velocity, delta * 2.0)
-	
-	timp_urmator_sunet_idle -= delta
-	if timp_urmator_sunet_idle <= 0:
-		if not sunet_idle.playing:			
-			sunet_idle.play()#trebuie de testat
-		timp_urmator_sunet_idle = randf_range(4.0, 6.0)
 
 func schimba_directia_random():
 	var unghi = randf_range(-PI, PI)
