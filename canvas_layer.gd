@@ -4,7 +4,7 @@ extends CanvasLayer
 
 func _ready():
 
-	await get_tree().create_timer(7.0).timeout
+	await get_tree().create_timer(3.0).timeout
 	
 	var animatie = create_tween()
 	
