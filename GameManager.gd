@@ -4,54 +4,54 @@ var greseli = 0
 
 var intrebari = [
 	{
-		"q": "SD: Care este complexitatea timpului pentru construirea unui Max-Heap dintr-un array nesortat (Build-Heap)?",
-		"a": ["O(n log n)", "O(n)", "O(log n)", "O(n^2)"],
+		"q": "SD: Ce structură de date funcționează pe principiul LIFO (Last In, First Out)?",
+		"a": ["Coada (Queue)", "Stiva (Stack)", "Vectorul", "Arborele"],
 		"corect": 1 
 	},
 	{
-		"q": "Math. Speciale: Care este reziduul funcției f(z) = 1/(z^2 + 1) în polul z = i?",
-		"a": ["1 / 2i", "-1 / 2i", "0", "2i"],
-		"corect": 0
+		"q": "Programare C: Care este specificatorul de format folosit pentru afișarea unui număr întreg (int)?",
+		"a": ["%f", "%c", "%d", "%s"],
+		"corect": 2
 	},
 	{
-		"q": "Metode Numerice: Care este ordinul de convergență al metodei Newton-Raphson pentru o rădăcină simplă?",
-		"a": ["Liniar (1)", "Pătratic (2)", "Cubic (3)", "Exponențial"],
+		"q": "Digitală: Care este rezultatul operației logice AND între 1 și 0?",
+		"a": ["1", "0", "Nu se poate determina", "High Impedance"],
 		"corect": 1
 	},
 	{
-		"q": "Disp. Electronice: Ce fenomen apare într-un tranzistor BJT din cauza modulării lățimii bazei?",
-		"a": ["Efectul Zener", "Efectul Hall", "Efectul Early", "Efectul Miller"],
-		"corect": 2
-	},
-	{
-		"q": "Analogică: Conform criteriului Barkhausen, care este defazajul total necesar pe buclă pentru oscilație?",
-		"a": ["90 grade", "180 grade", "0 sau 360 grade", "45 grade"],
-		"corect": 2
-	},
-	{
-		"q": "Digitală: Ce apare la ieșirea unui circuit combinațional când intrările se schimbă și cauzează un glitch temporar?",
-		"a": ["Hazard (Alea)", "Metastabilitate", "Jitter", "Crosstalk"],
-		"corect": 0
-	},
-	{
-		"q": "Programare C: Ce va afișa: int x=10; int *p=&x; printf('%d', *p++); ?",
-		"a": ["11", "10", "Adresa lui x", "Eroare de compilare"],
+		"q": "Disp. Electronice: Care este funcția principală a unei diode redresoare?",
+		"a": ["Amplifică semnalul", "Permite curentul într-un singur sens", "Stochează energie", "Scade tensiunea la 0"],
 		"corect": 1
 	},
 	{
-		"q": "Semnale: Unde trebuie să se afle polii funcției de transfer H(z) pentru ca un sistem LTI cauzal să fie stabil?",
-		"a": ["În afara cercului unitate", "Pe axa imaginară", "În semiplanul stâng", "În interiorul cercului unitate"],
-		"corect": 3
-	},
-	{
-		"q": "Math (Alg. Liniară): Care sunt valorile proprii (eigenvalues) posibile pentru o matrice idempotentă (A^2 = A)?",
-		"a": ["Doar 0", "Doar 1", "0 și 1", "-1 și 1"],
+		"q": "Analogică: Care este unitatea de măsură pentru Rezistența electrică?",
+		"a": ["Volt (V)", "Amper (A)", "Ohm (Ω)", "Watt (W)"],
 		"corect": 2
 	},
 	{
-		"q": "Analogică: Ce reprezintă CMRR (Raportul de rejecție pe mod comun) la un Amplificator Operațional?",
-		"a": ["Ad / Ac", "Ac / Ad", "Vout / Vin", "Zin / Zout"],
-		"corect": 0
+		"q": "Arhitectura Calc: Ce înseamnă RAM?",
+		"a": ["Read Access Memory", "Random Access Memory", "Run All Memory", "Real Action Memory"],
+		"corect": 1
+	},
+	{
+		"q": "Metode Numerice: Care este baza sistemului de numerație binar?",
+		"a": ["10", "16", "2", "8"],
+		"corect": 2
+	},
+	{
+		"q": "Semnale: În ce se măsoară frecvența unui semnal?",
+		"a": ["Secunde", "Hertz (Hz)", "Metri", "Decibeli"],
+		"corect": 1
+	},
+	{
+		"q": "Math (Alg. Liniară): Care este determinantul unei matrici unitate (identitate)?",
+		"a": ["0", "1", "-1", "Infinit"],
+		"corect": 1
+	},
+	{
+		"q": "Calculatoare: Câți biți are un Byte (Octet)?",
+		"a": ["4 biți", "8 biți", "16 biți", "32 biți"],
+		"corect": 1
 	}
 ]
 
