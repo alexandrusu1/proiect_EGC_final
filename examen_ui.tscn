@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6xtvbguh8xp5"]
+
+[ext_resource type="Script" uid="uid://c3oogxfkri2x0" path="res://examen_ui.gd" id="1_pnlbo"]
+
+[node name="ExamUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pnlbo")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+
+[node name="TextIntrebare" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 142.0
+offset_right = 20.0
+offset_bottom = 165.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 50
+text = "Intrebare de test"
+
+[node name="Button" type="Button" parent="Panel/TextIntrebare"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = 123.5
+offset_right = 4.0
+offset_bottom = 131.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button2" type="Button" parent="Panel/TextIntrebare"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = 219.5
+offset_right = 4.0
+offset_bottom = 227.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button3" type="Button" parent="Panel/TextIntrebare"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = 334.5
+offset_right = 5.0
+offset_bottom = 342.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button4" type="Button" parent="Panel/TextIntrebare"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = 411.0
+offset_right = 4.0
+offset_bottom = 419.0
+grow_horizontal = 2
+grow_vertical = 0
+icon_alignment = 1
+
+[connection signal="pressed" from="Panel/TextIntrebare/Button" to="." method="_on_ButonA_pressed"]
+[connection signal="pressed" from="Panel/TextIntrebare/Button2" to="." method="_on_ButonB_pressed"]
+[connection signal="pressed" from="Panel/TextIntrebare/Button3" to="." method="_on_ButonC_pressed"]
+[connection signal="pressed" from="Panel/TextIntrebare/Button4" to="." method="_on_ButonD_pressed"]
