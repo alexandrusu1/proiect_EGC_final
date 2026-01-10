@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="gh"
-run/main_scene="uid://c0rrueop5rb5a"
+run/main_scene="res://main_menu.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -25,6 +25,8 @@ window/stretch/mode="canvas_items"
 [editor]
 
 movie_writer/movie_file="C:/Users/alexr/Desktop/proiect_EGC/movie.avi"
+version_control/plugin_name="GitPlugin"
+version_control/autoload_on_startup=true
 
 [input]
 
