@@ -116,7 +116,7 @@ func game_over():
 		jumpscare_screen.visible = true
 		sunet_jumpscare.play()
 	await get_tree().create_timer(2.0).timeout
-	get_tree().reload_current_scene()
+	GameManager.restart_joc()
 	
 func vine_la_jucator():
 	if player:
@@ -124,7 +124,7 @@ func vine_la_jucator():
 		var directie = (global_position - player.global_position).normalized()
 		global_position = player.global_position + directie * 10.0
 		
-
+		sunet_idle.stop()
 		stare_curenta = URMARIRE
 		if not sunet_urmarire.playing:
 			sunet_urmarire.play()
