@@ -6,16 +6,16 @@ extends CharacterBody3D
 @export var raza_scapare: float = 20
 @export var distanta_atac: float = 1.5
 @export var imagine_alerta: TextureRect
-
 @export var jumpscare_screen: CanvasLayer 
 
 @onready var sunet_idle = $SunetIdle
-var timp_urmator_sunet_idle: float = 5.0
+@onready var sunet_urmarire = $SunetUrmarire
+@onready var sunet_jumpscare = $SunetJumpscare
 
+var timp_urmator_sunet_idle: float = 5.0
 var player: Node3D = null
 var gravitatie = ProjectSettings.get_setting("physics/3d/default_gravity")
 var is_game_over = false
-
 
 enum { PATRULA, URMARIRE }
 var stare_curenta = PATRULA
@@ -30,7 +30,6 @@ func _ready():
 
 	if jumpscare_screen: 
 		jumpscare_screen.visible = false
-	
 
 	var model = get_node_or_null("Running")
 	if model: model.rotation_degrees.y = 180
@@ -54,16 +53,22 @@ func _physics_process(delta):
 				comportament_patrulare(delta)
 				if imagine_alerta:
 					imagine_alerta.visible = false
+				
 				if distanta < raza_detectie:
 					stare_curenta = URMARIRE
+					if not sunet_urmarire.playing:
+						sunet_urmarire.play()
+					sunet_idle.stop()
 			
 			URMARIRE:
 				comportament_urmarire(distanta)
 				if imagine_alerta:
 					imagine_alerta.visible = true
 					imagine_alerta.modulate.a = 0.5 + abs(sin(Time.get_ticks_msec() * 0.005)) * 0.5
+				
 				if distanta > raza_scapare:
 					stare_curenta = PATRULA
+					sunet_urmarire.stop()
 
 	move_and_slide()
 
@@ -80,8 +85,8 @@ func comportament_patrulare(delta):
 	
 	timp_urmator_sunet_idle -= delta
 	if timp_urmator_sunet_idle <= 0:
-		if not sunet_idle.playing:			
-			sunet_idle.play()#trebuie de testat
+		if not sunet_idle.playing and stare_curenta == PATRULA:			
+			sunet_idle.play()
 		timp_urmator_sunet_idle = randf_range(4.0, 6.0)
 
 func schimba_directia_random():
@@ -90,7 +95,6 @@ func schimba_directia_random():
 	timp_schimbare_directie = randf_range(2.0, 5.0)
 
 func comportament_urmarire(distanta):
-
 	if distanta < distanta_atac:
 		game_over()
 		return
@@ -105,17 +109,18 @@ func rotire_lina(tinta, viteza_rot):
 	look_target.y = global_position.y
 	look_at(look_target, Vector3.UP)
 
-
 func game_over():
 	if is_game_over: return
 	is_game_over = true
 
 	velocity = Vector3.ZERO
 	
+	sunet_idle.stop()
+	sunet_urmarire.stop()
 
 	if jumpscare_screen:
 		jumpscare_screen.visible = true
+		sunet_jumpscare.play()
 
 	await get_tree().create_timer(2.0).timeout
-
 	get_tree().reload_current_scene()
