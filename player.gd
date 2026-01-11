@@ -13,8 +13,8 @@ const FOV_NORMAL = 75.0
 const FOV_SPRINT = 85.0
 const FOV_TRANSITION_SPEED = 8.0
 
-const BOBBING_AMPLITUDE = 0.05
-const BOBBING_FREQUENCY = 2.0
+const BOBBING_AMPLITUDE = 0.03 
+const BOBBING_FREQUENCY = 14.0 
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var stamina = STAMINA_MAX
@@ -24,6 +24,10 @@ var pozitie_initiala_camera = Vector3.ZERO
 @onready var camera = $Camera3D
 @onready var stamina_bar = get_node("/root/Main/HUD/ProgressBar") 
 
+@export var sunete_pasi: Array[AudioStream] # Aici vei trage cele 5 fișiere .ogg în Inspector
+@onready var audio_pasi = $SunetPasi
+
+var prag_pas = 0.0 # Monitorizează ciclul de mers pentru sunet
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -97,22 +101,36 @@ func actualizeaza_camera(delta):
 	var target_fov = FOV_NORMAL
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	
-
 	if Input.is_action_pressed("sprint") and stamina > 0 and input_dir != Vector2.ZERO and is_on_floor():
 		target_fov = FOV_SPRINT
 	
 	camera.fov = lerp(camera.fov, target_fov, FOV_TRANSITION_SPEED * delta)
 	
 	if is_on_floor() and velocity.length() > 0.5:
-		timp_bobbing += delta * BOBBING_FREQUENCY * (velocity.length() / VITEZA_NORMALA)
+		var viteza_bobbing = BOBBING_FREQUENCY * (velocity.length() / VITEZA_NORMALA)
+		timp_bobbing += delta * viteza_bobbing
+
+		var valoare_sin = sin(timp_bobbing)
+		if prag_pas > 0 and valoare_sin <= 0:
+			redau_sunet_pas_aleatoriu()
+		prag_pas = valoare_sin
 		
 		var bobbing_offset = Vector3(
 			cos(timp_bobbing * 2.0) * BOBBING_AMPLITUDE * 0.5,
 			abs(sin(timp_bobbing)) * BOBBING_AMPLITUDE,
 			0
 		)
-		
 		camera.position = pozitie_initiala_camera + bobbing_offset
 	else:
 		timp_bobbing = 0
+		prag_pas = 0
 		camera.position = lerp(camera.position, pozitie_initiala_camera, delta * 10.0)
+
+func redau_sunet_pas_aleatoriu():
+	if sunete_pasi.size() > 0:
+		var index_aleator = randi() % sunete_pasi.size()
+		audio_pasi.stream = sunete_pasi[index_aleator]
+		
+		audio_pasi.pitch_scale = randf_range(0.9, 1.1)
+		
+		audio_pasi.play()
