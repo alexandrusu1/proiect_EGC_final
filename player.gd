@@ -24,10 +24,10 @@ var pozitie_initiala_camera = Vector3.ZERO
 @onready var camera = $Camera3D
 @onready var stamina_bar = get_node("/root/Main/HUD/ProgressBar") 
 
-@export var sunete_pasi: Array[AudioStream] # Aici vei trage cele 5 fișiere .ogg în Inspector
+@export var sunete_pasi: Array[AudioStream] 
 @onready var audio_pasi = $SunetPasi
 
-var prag_pas = 0.0 # Monitorizează ciclul de mers pentru sunet
+var prag_pas = 0.0 
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -69,7 +69,7 @@ func proceseaza_miscare(delta):
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	# AM MODIFICAT AICI: "sprint"
+
 	var este_sprint = Input.is_action_pressed("sprint") and stamina > 0 and is_on_floor() and input_dir != Vector2.ZERO
 	var viteza_actuala = VITEZA_SPRINT if este_sprint else VITEZA_NORMALA
 	
@@ -83,7 +83,7 @@ func proceseaza_miscare(delta):
 func actualizeaza_stamina(delta):
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	
-	# AM MODIFICAT AICI: "sprint"
+
 	if Input.is_action_pressed("sprint") and is_on_floor() and input_dir != Vector2.ZERO and stamina > 0:
 		stamina -= STAMINA_CONSUM_SPRINT * delta
 	else:

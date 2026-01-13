@@ -6,7 +6,7 @@ extends Control
 @onready var btn_c = $Panel/TextIntrebare/Button3
 @onready var btn_d = $Panel/TextIntrebare/Button4
 
-# Această listă este obligatorie pentru a găsi butoanele!
+
 @onready var lista_butoane = [btn_a, btn_b, btn_c, btn_d]
 
 var id_curent = 0
